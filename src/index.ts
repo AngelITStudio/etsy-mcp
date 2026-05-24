@@ -42,8 +42,9 @@ export function createEtsyMcpServer(config: ServerConfig): McpServer {
     version: "1.0.0",
   });
 
+  const profile = process.env.ETSY_PROFILE || "default";
   const tokenStorePath =
-    config.tokenStorePath ?? join(homedir(), ".etsy-mcp", "tokens.json");
+    config.tokenStorePath ?? join(homedir(), ".etsy-mcp", `tokens-${profile}.json`);
 
   const tokenStore = new TokenStore(tokenStorePath);
   const oauthClient = new OAuthClient({
