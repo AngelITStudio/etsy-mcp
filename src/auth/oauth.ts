@@ -152,17 +152,19 @@ export class OAuthClient {
           res.end(
             "<html><body><h1>Authorization successful!</h1><p>You can close this window.</p></body></html>"
           );
+          // Capture port BEFORE close — server.address() returns null after close.
+          const port = (server.address() as any).port;
           server.close();
           resolve({
             code,
-            redirectUri: `http://localhost:${(server.address() as any).port}/callback`,
+            redirectUri: `http://localhost:${port}/callback`,
             codeVerifier,
           });
         }
       );
 
-      server.listen(0, async () => {
-        const port = (server.address() as any).port;
+      server.listen(3003, async () => {
+        const port = 3003;
         const redirectUri = `http://localhost:${port}/callback`;
         const authData = await this.buildAuthorizationUrl(redirectUri);
         codeVerifier = authData.codeVerifier;
